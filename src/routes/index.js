@@ -4,6 +4,7 @@ const router = express.Router();
 const loginRoutes = require("./login.route");
 const accountRoutes = require("./accounts.route");
 const characterRoutes = require("./characters.route");
+const currenciesRoutes = require("./currencies.route");
 
 /**
  * @swagger
@@ -21,5 +22,5 @@ router.get("/health-check", (req, res) => {
 router.use(loginRoutes);
 router.use(accountRoutes);
 router.use(characterRoutes);
-
+router.use(currenciesRoutes);
 module.exports = router;
