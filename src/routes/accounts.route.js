@@ -12,6 +12,8 @@ const router = express.Router();
  * /api/auth/accounts:
  *   get:
  *     summary: Get account list (authenticated)
+ *     tags:
+ *       - Accounts
  *     security:
  *       - cookieAuth: []
  *     responses:
@@ -39,6 +41,8 @@ router.get("/auth/accounts", authenticate, getAccounts);
  * /api/auth/accounts/{account}:
  *   get:
  *     summary: Get account (authenticated)
+ *     tags:
+ *       - Accounts
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -72,6 +76,8 @@ router.get("/auth/accounts/:account", authenticate, getAccount);
  *   post:
  *     summary: Create a new account (authenticated)
  *     description: Creates a new account with the provided details and initializes the shop account. Requires authentication.
+ *     tags:
+ *       - Accounts
  *     security:
  *       - cookieAuth: []
  *     requestBody:
