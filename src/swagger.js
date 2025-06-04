@@ -9,6 +9,17 @@ const options = {
       version: "1.0.0",
       description: "API documentation for my FlyFF Admin Server API",
     },
+    servers: [{ url: "http://localhost:3000" }],
+    components: {
+      securitySchemes: {
+        cookieAuth: {
+          type: "apiKey",
+          in: "cookie",
+          name: "token",
+        },
+      },
+    },
+    security: [{ cookieAuth: [] }],
   },
   apis: ["./src/routes/*.js"],
 };

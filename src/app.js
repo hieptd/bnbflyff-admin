@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { swaggerUi, specs } = require("./swagger");
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const morgan = require("morgan");
 
@@ -19,13 +20,22 @@ app.use(express.json());
 
 // Middleware
 applySecurityHeaders(app);
+app.use(cookieParser());
 app.use(rateLimiter);
 app.use(createCorsMiddleware());
 app.use(enforceHttps);
 app.use(ipWhitelist);
 
 // Documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    swaggerOptions: {
+      withCredentials: true,
+    },
+  })
+);
 
 // Routes
 app.use("/api", routes);

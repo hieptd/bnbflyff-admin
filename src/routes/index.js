@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const loginRoutes = require("./login.route");
+const accountsRoutes = require("./accounts.route");
 
 /**
  * @swagger
@@ -17,5 +18,6 @@ router.get("/health-check", (req, res) => {
 });
 
 router.use(loginRoutes);
+router.use(accountsRoutes);
 
 module.exports = router;

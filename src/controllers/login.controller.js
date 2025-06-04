@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { poolPromise } = require("../database/database");
+const sql = require("mssql");
 
 const hashPassword = (password) => {
   const hash = crypto.createHash("md5");
@@ -17,10 +18,12 @@ const login = async (req, res) => {
     const pool = await poolPromise;
     const accountDetailResult = await pool
       .request()
+      .input("account", sql.VarChar, account)
       .query(
-        `SELECT * FROM ${ACCOUNT_TBL_DETAIL} WHERE account = '${account}' AND m_chLoginAuthority = 'P'`
+        `SELECT * FROM ${ACCOUNT_TBL_DETAIL} WHERE account = @account AND m_chLoginAuthority = 'P'`
       );
 
+    console.log(accountDetailResult.recordset);
     if (accountDetailResult.recordset.length === 0) {
       return res
         .status(400)
@@ -32,24 +35,25 @@ const login = async (req, res) => {
     const hashedPassword = hashPassword(password);
     const accountResult = await pool
       .request()
+      .input("account", sql.VarChar, user.account)
       .query(
-        `SELECT * FROM ${ACCOUNT_TBL} WHERE account = '${user.account}' AND password = '${hashedPassword}'`
+        `SELECT * FROM ${ACCOUNT_TBL} WHERE account = @account AND password = '${hashedPassword}'`
       );
 
-    if (!accountResult.recordset.length === 0) {
+    if (accountResult.recordset.length === 0) {
       return res.status(400).json({ message: "User not found" });
     }
 
     const token = jwt.sign(
-      { account: accountResult.account },
+      { account: accountResult.recordset[0].account },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1d" }
     );
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: process.env.NODE_ENV !== "development", // false for local dev without HTTPS
+      sameSite: "lax", 
       maxAge: 24 * 60 * 60 * 1000,
     });
 
