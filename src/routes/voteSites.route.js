@@ -1,17 +1,17 @@
 const express = require("express");
 const authenticate = require("../middlewares/authenticate");
 const {
-  getCurrencies,
-  getCurrency,
-  createCurrency,
-} = require("../controllers/currencies.controller");
+  getVoteSites,
+  getVoteSite,
+  createVoteSite,
+} = require("../controllers/voteSites.controller");
 const router = express.Router();
 
 /**
  * @swagger
- * /api/auth/shop/currencies:
+ * /api/auth/shop/vote-sites:
  *   get:
- *     summary: Get currency list
+ *     summary: Get vote site list
  *     tags:
  *       - Shop
  *     security:
@@ -34,37 +34,37 @@ const router = express.Router();
  *         description: Unauthorized
  */
 
-router.get("/auth/shop/currencies", authenticate, getCurrencies);
+router.get("/auth/shop/vote-sites", authenticate, getVoteSites);
 
 /**
  * @swagger
- * /api/auth/shop/currencies/{currencyId}:
+ * /api/auth/shop/vote-sites/{id}:
  *   get:
- *     summary: Get currency
+ *     summary: Get vote site
  *     tags:
  *       - Shop
  *     security:
  *       - cookieAuth: []
  *     parameters:
  *       - in: path
- *         name: currencyId
+ *         name: id
  *         schema:
  *           type: integer
- *         description: Currency ID
+ *         description: vote site ID
  *     responses:
  *       200:
  *         description: Success
  *       401:
  *         description: Unauthorized
  */
-router.get("/auth/shop/currencies/:currencyId", authenticate, getCurrency);
+router.get("/auth/shop/vote-sites/:id", authenticate, getVoteSite);
 
 /**
  * @swagger
- * /api/auth/shop/currencies/create:
+ * /api/auth/shop/vote-sites/create:
  *   post:
- *     summary: Create a new currency (authenticated)
- *     description: Creates a new currency and initializes wallets for all shop accounts. Requires authentication.
+ *     summary: Create a new vote site (authenticated)
+ *     description: Creates a new vote site. Requires authentication.
  *     tags:
  *       - Shop
  *     security:
@@ -77,19 +77,37 @@ router.get("/auth/shop/currencies/:currencyId", authenticate, getCurrency);
  *             type: object
  *             required:
  *               - name
- *               - display_name
+ *               - link
+ *               - type
  *             properties:
  *               name:
  *                 type: string
- *                 example: "tokens"
- *                 description: Internal name for the currency
- *               display_name:
+ *                 example: "pserver100"
+ *                 description: Internal name for the vote site
+ *               link:
  *                 type: string
- *                 example: "Tokens"
- *                 description: User-facing display name for the currency
+ *                 example: "https://www.gtop100.com/topsites/Flyff"
+ *                 description: URL to the vote site
+ *               image:
+ *                 type: string
+ *                 example: "https://example.com/images/gtop100.png"
+ *                 description: Image URL for the vote site (optional)
+ *               type:
+ *                 type: string
+ *                 example: "vote"
+ *                 description: Type or category of the vote site
+ *               points:
+ *                 type: integer
+ *                 example: 5
+ *                 description: Number of vote points awarded. Default is 0.
+ *               is_active:
+ *                 type: string
+ *                 enum: ["0", "1"]
+ *                 example: "1"
+ *                 description: Whether the site is active ("1") or inactive ("0")
  *     responses:
- *       200:
- *         description: Currency created and wallets initialized
+ *       201:
+ *         description: Vote site created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -100,7 +118,7 @@ router.get("/auth/shop/currencies/:currencyId", authenticate, getCurrency);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Currency created successfully and wallets initialized."
+ *                   example: "Vote site created successfully."
  *       400:
  *         description: Invalid input
  *       401:
@@ -108,6 +126,6 @@ router.get("/auth/shop/currencies/:currencyId", authenticate, getCurrency);
  *       500:
  *         description: Internal server error
  */
-router.post("/auth/shop/currencies/create", authenticate, createCurrency);
+router.post("/auth/shop/vote-sites/create", authenticate, createVoteSite);
 
 module.exports = router;

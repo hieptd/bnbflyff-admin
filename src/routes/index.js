@@ -5,6 +5,7 @@ const loginRoutes = require("./login.route");
 const accountRoutes = require("./accounts.route");
 const characterRoutes = require("./characters.route");
 const currenciesRoutes = require("./currencies.route");
+const voteSitesRoutes = require("./voteSites.route");
 
 /**
  * @swagger
@@ -23,4 +24,5 @@ router.use(loginRoutes);
 router.use(accountRoutes);
 router.use(characterRoutes);
 router.use(currenciesRoutes);
+router.use(voteSitesRoutes);
 module.exports = router;
