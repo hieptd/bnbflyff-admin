@@ -1,0 +1,648 @@
+{
+  "DST_NONE": {
+    "id": 0,
+    "key": "DST_NONE"
+  },
+  "DST_STR": {
+    "id": 1,
+    "name": "STR",
+    "key": "DST_STR"
+  },
+  "DST_DEX": {
+    "id": 2,
+    "name": "DEX",
+    "key": "DST_DEX"
+  },
+  "DST_INT": {
+    "id": 3,
+    "name": "INT",
+    "key": "DST_INT"
+  },
+  "DST_STA": {
+    "id": 4,
+    "name": "STA",
+    "key": "DST_STA"
+  },
+  "DST_YOY_DMG": {
+    "id": 5,
+    "name": "Increased Attack Power (Yo-Yo)",
+    "key": "DST_YOY_DMG"
+  },
+  "DST_BOW_DMG": {
+    "id": 6,
+    "name": "Increased Attack Power (Bow)",
+    "key": "DST_BOW_DMG"
+  },
+  "DST_CHR_RANGE": {
+    "id": 7,
+    "key": "DST_CHR_RANGE"
+  },
+  "DST_BLOCK_RANGE": {
+    "id": 8,
+    "name": "Blocking Rate of Ranged Attacks",
+    "isPercentage": true,
+    "key": "DST_BLOCK_RANGE"
+  },
+  "DST_CHR_CHANCECRITICAL": {
+    "id": 9,
+    "name": "Critical Chance",
+    "isPercentage": true,
+    "key": "DST_CHR_CHANCECRITICAL"
+  },
+  "DST_CHR_BLEEDING": {
+    "id": 10,
+    "key": "DST_CHR_BLEEDING"
+  },
+  "DST_SPEED": {
+    "id": 11,
+    "name": "Speed",
+    "isPercentage": true,
+    "key": "DST_SPEED"
+  },
+  "DST_ABILITY_MIN": {
+    "id": 12,
+    "key": "DST_ABILITY_MIN"
+  },
+  "DST_ABILITY_MAX": {
+    "id": 13,
+    "key": "DST_ABILITY_MAX"
+  },
+  "DST_BLOCK_MELEE": {
+    "id": 14,
+    "name": "Blocking Rate of Melee Attacks",
+    "isPercentage": true,
+    "key": "DST_BLOCK_MELEE"
+  },
+  "DST_MASTRY_EARTH": {
+    "id": 15,
+    "name": "Mastery: Earth",
+    "key": "DST_MASTRY_EARTH"
+  },
+  "DST_STOP_MOVEMENT": {
+    "id": 16,
+    "key": "DST_STOP_MOVEMENT"
+  },
+  "DST_MASTRY_FIRE": {
+    "id": 17,
+    "name": "Mastery: Fire",
+    "key": "DST_MASTRY_FIRE"
+  },
+  "DST_MASTRY_WATER": {
+    "id": 18,
+    "name": "Mastery: Water",
+    "key": "DST_MASTRY_WATER"
+  },
+  "DST_MASTRY_ELECTRICITY": {
+    "id": 19,
+    "name": "Mastery: Electricity",
+    "key": "DST_MASTRY_ELECTRICITY"
+  },
+  "DST_MASTRY_WIND": {
+    "id": 20,
+    "name": "Mastery: Wind",
+    "key": "DST_MASTRY_WIND"
+  },
+  "DST_KNUCKLE_DMG": {
+    "id": 21,
+    "name": "Increased Attack Power (Knuckle)",
+    "key": "DST_KNUCKLE_DMG"
+  },
+  "DST_PVP_DMG_RATE": {
+    "id": 22,
+    "key": "DST_PVP_DMG_RATE"
+  },
+  "DST_ATTACKSPEED": {
+    "id": 24,
+    "name": "Attack Speed",
+    "isPercentage": true,
+    "key": "DST_ATTACKSPEED"
+  },
+  "DST_SWD_DMG": {
+    "id": 25,
+    "name": "Increased Attack Power (Sword)",
+    "key": "DST_SWD_DMG"
+  },
+  "DST_ADJDEF": {
+    "id": 26,
+    "name": "DEF",
+    "key": "DST_ADJDEF"
+  },
+  "DST_RESIST_MAGIC": {
+    "id": 27,
+    "key": "DST_RESIST_MAGIC"
+  },
+  "DST_RESIST_ELECTRICITY": {
+    "id": 28,
+    "key": "DST_RESIST_ELECTRICITY"
+  },
+  "DST_REFLECT_DAMAGE": {
+    "id": 29,
+    "name": "Reflect Damage",
+    "isPercentage": true,
+    "key": "DST_REFLECT_DAMAGE"
+  },
+  "DST_RESIST_FIRE": {
+    "id": 30,
+    "key": "DST_RESIST_FIRE"
+  },
+  "DST_RESIST_WIND": {
+    "id": 31,
+    "key": "DST_RESIST_WIND"
+  },
+  "DST_RESIST_WATER": {
+    "id": 32,
+    "key": "DST_RESIST_WATER"
+  },
+  "DST_RESIST_EARTH": {
+    "id": 33,
+    "key": "DST_RESIST_EARTH"
+  },
+  "DST_AXE_DMG": {
+    "id": 34,
+    "name": "Increased Attack Power (Axe)",
+    "key": "DST_AXE_DMG"
+  },
+  "DST_HP_MAX": {
+    "id": 35,
+    "name": "Max. HP",
+    "key": "DST_HP_MAX"
+  },
+  "DST_MP_MAX": {
+    "id": 36,
+    "name": "Max. MP",
+    "key": "DST_MP_MAX"
+  },
+  "DST_FP_MAX": {
+    "id": 37,
+    "name": "Max. FP",
+    "key": "DST_FP_MAX"
+  },
+  "DST_HP": {
+    "id": 38,
+    "key": "DST_HP"
+  },
+  "DST_MP": {
+    "id": 39,
+    "key": "DST_MP"
+  },
+  "DST_FP": {
+    "id": 40,
+    "key": "DST_FP"
+  },
+  "DST_HP_RECOVERY": {
+    "id": 41,
+    "key": "DST_HP_RECOVERY"
+  },
+  "DST_MP_RECOVERY": {
+    "id": 42,
+    "key": "DST_MP_RECOVERY"
+  },
+  "DST_FP_RECOVERY": {
+    "id": 43,
+    "key": "DST_FP_RECOVERY"
+  },
+  "DST_KILL_HP": {
+    "id": 44,
+    "key": "DST_KILL_HP"
+  },
+  "DST_KILL_MP": {
+    "id": 45,
+    "key": "DST_KILL_MP"
+  },
+  "DST_KILL_FP": {
+    "id": 46,
+    "key": "DST_KILL_FP"
+  },
+  "DST_ADJ_HITRATE": {
+    "id": 47,
+    "name": "Hit",
+    "isPercentage": true,
+    "key": "DST_ADJ_HITRATE"
+  },
+  "DST_CLEARBUFF": {
+    "id": 49,
+    "key": "DST_CLEARBUFF"
+  },
+  "DST_CHR_STEALHP_IMM": {
+    "id": 50,
+    "name": "Damage absorb",
+    "isPercentage": true,
+    "key": "DST_CHR_STEALHP_IMM"
+  },
+  "DST_ATTACKSPEED_RATE": {
+    "id": 51,
+    "key": "DST_ATTACKSPEED_RATE"
+  },
+  "DST_HP_MAX_RATE": {
+    "id": 52,
+    "name": "Increased HP",
+    "isPercentage": true,
+    "key": "DST_HP_MAX_RATE"
+  },
+  "DST_MP_MAX_RATE": {
+    "id": 53,
+    "name": "Increased MP",
+    "isPercentage": true,
+    "key": "DST_MP_MAX_RATE"
+  },
+  "DST_FP_MAX_RATE": {
+    "id": 54,
+    "isPercentage": true,
+    "key": "DST_FP_MAX_RATE"
+  },
+  "DST_CHR_WEAEATKCHANGE": {
+    "id": 55,
+    "name": "Attribute Attack",
+    "key": "DST_CHR_WEAEATKCHANGE"
+  },
+  "DST_CHR_STEALHP": {
+    "id": 56,
+    "name": "Damage absorb",
+    "isPercentage": true,
+    "key": "DST_CHR_STEALHP"
+  },
+  "DST_CHR_CHANCESTUN": {
+    "id": 57,
+    "key": "DST_CHR_CHANCESTUN"
+  },
+  "DST_AUTOHP": {
+    "id": 58,
+    "key": "DST_AUTOHP"
+  },
+  "DST_CHR_CHANCEDARK": {
+    "id": 59,
+    "key": "DST_CHR_CHANCEDARK"
+  },
+  "DST_CHR_CHANCEPOISON": {
+    "id": 60,
+    "key": "DST_CHR_CHANCEPOISON"
+  },
+  "DST_IMMUNITY": {
+    "id": 61,
+    "key": "DST_IMMUNITY"
+  },
+  "DST_ADDMAGIC": {
+    "id": 62,
+    "key": "DST_ADDMAGIC"
+  },
+  "DST_CHR_DMG": {
+    "id": 63,
+    "key": "DST_CHR_DMG"
+  },
+  "DST_CHRSTATE": {
+    "id": 64,
+    "key": "DST_CHRSTATE"
+  },
+  "DST_PARRY": {
+    "id": 65,
+    "key": "DST_PARRY"
+  },
+  "DST_ATKPOWER_RATE": {
+    "id": 66,
+    "name": "Increased Attack",
+    "isPercentage": true,
+    "key": "DST_ATKPOWER_RATE"
+  },
+  "DST_EXPERIENCE": {
+    "id": 67,
+    "name": "Exp.",
+    "key": "DST_EXPERIENCE"
+  },
+  "DST_JUMPING": {
+    "id": 68,
+    "key": "DST_JUMPING"
+  },
+  "DST_CHR_CHANCESTEALHP": {
+    "id": 69,
+    "key": "DST_CHR_CHANCESTEALHP"
+  },
+  "DST_CHR_CHANCEBLEEDING": {
+    "id": 70,
+    "key": "DST_CHR_CHANCEBLEEDING"
+  },
+  "DST_RECOVERY_EXP": {
+    "id": 71,
+    "key": "DST_RECOVERY_EXP"
+  },
+  "DST_ADJDEF_RATE": {
+    "id": 72,
+    "name": "Increased DEF",
+    "key": "DST_ADJDEF_RATE"
+  },
+  "DST_MP_DEC_RATE": {
+    "id": 73,
+    "name": "Decreased MP Consumption",
+    "key": "DST_MP_DEC_RATE"
+  },
+  "DST_FP_DEC_RATE": {
+    "id": 74,
+    "name": "Decreased FP Consumption",
+    "key": "DST_FP_DEC_RATE"
+  },
+  "DST_SPELL_RATE": {
+    "id": 75,
+    "name": "Decreased Casting Time",
+    "isPercentage": true,
+    "key": "DST_SPELL_RATE"
+  },
+  "DST_CAST_CRITICAL_RATE": {
+    "id": 76,
+    "name": "Max. Spell",
+    "key": "DST_CAST_CRITICAL_RATE"
+  },
+  "DST_CRITICAL_BONUS": {
+    "id": 77,
+    "name": "Additional Damage of Critical Hits",
+    "isPercentage": true,
+    "key": "DST_CRITICAL_BONUS"
+  },
+  "DST_SKILL_LEVEL": {
+    "id": 78,
+    "key": "DST_SKILL_LEVEL"
+  },
+  "DST_MONSTER_DMG": {
+    "id": 79,
+    "name": "Damage increase vs. Monsters",
+    "isPercentage": true,
+    "key": "DST_MONSTER_DMG"
+  },
+  "DST_PVP_DMG": {
+    "id": 80,
+    "name": "Damage increase during PvP.",
+    "isPercentage": true,
+    "key": "DST_PVP_DMG"
+  },
+  "DST_MELEE_STEALHP": {
+    "id": 81,
+    "name": "Lifesteal (HP)",
+    "key": "DST_MELEE_STEALHP"
+  },
+  "DST_HEAL": {
+    "id": 82,
+    "name": "Cure",
+    "key": "DST_HEAL"
+  },
+  "DST_ATKPOWER": {
+    "id": 83,
+    "name": "Attack",
+    "key": "DST_ATKPOWER"
+  },
+  "DST_ONEHANDMASTER_DMG": {
+    "id": 85,
+    "name": "Increases damage while using a one-handed weapon.",
+    "key": "DST_ONEHANDMASTER_DMG"
+  },
+  "DST_TWOHANDMASTER_DMG": {
+    "id": 86,
+    "name": "Increases damage while using a two-handed weapon.",
+    "key": "DST_TWOHANDMASTER_DMG"
+  },
+  "DST_YOYOMASTER_DMG": {
+    "id": 87,
+    "name": "Increases damage while using a Yo-Yo.",
+    "key": "DST_YOYOMASTER_DMG"
+  },
+  "DST_BOWMASTER_DMG": {
+    "id": 88,
+    "name": "Increases damage while using a Bow",
+    "key": "DST_BOWMASTER_DMG"
+  },
+  "DST_KNUCKLEMASTER_DMG": {
+    "id": 89,
+    "name": "Increases damage while using a Knuckle.",
+    "key": "DST_KNUCKLEMASTER_DMG"
+  },
+  "DST_HAWKEYE_RATE": {
+    "id": 90,
+    "key": "DST_HAWKEYE_RATE"
+  },
+  "DST_RESIST_MAGIC_RATE": {
+    "id": 91,
+    "key": "DST_RESIST_MAGIC_RATE"
+  },
+  "DST_GIFTBOX": {
+    "id": 92,
+    "name": "It becomes a lucky box when you wear it.",
+    "key": "DST_GIFTBOX"
+  },
+  "DST_RESTPOINT_RATE": {
+    "id": 93,
+    "key": "DST_RESTPOINT_RATE"
+  },
+  "DST_IGNORE_DMG_PVP": {
+    "id": 94,
+    "key": "DST_IGNORE_DMG_PVP"
+  },
+  "DST_TAKE_PVP_DMG_PHYSICAL_RATE": {
+    "id": 95,
+    "key": "DST_TAKE_PVP_DMG_PHYSICAL_RATE"
+  },
+  "DST_TAKE_PVP_DMG_MAGIC_RATE": {
+    "id": 96,
+    "key": "DST_TAKE_PVP_DMG_MAGIC_RATE"
+  },
+  "DST_TAKE_PVE_DMG_PHYSICAL_RATE": {
+    "id": 97,
+    "key": "DST_TAKE_PVE_DMG_PHYSICAL_RATE"
+  },
+  "DST_TAKE_PVE_DMG_MAGIC_RATE": {
+    "id": 98,
+    "key": "DST_TAKE_PVE_DMG_MAGIC_RATE"
+  },
+  "DST_DROP_ITEM_ALLGRADE_RATE": {
+    "id": 99,
+    "key": "DST_DROP_ITEM_ALLGRADE_RATE"
+  },
+  "DST_DROP_ITEM_ONEMORE_CHANCE": {
+    "id": 100,
+    "key": "DST_DROP_ITEM_ONEMORE_CHANCE"
+  },
+  "DST_GIVE_PVE_DMG_ELEMENT_FIRE_RATE": {
+    "id": 101,
+    "key": "DST_GIVE_PVE_DMG_ELEMENT_FIRE_RATE"
+  },
+  "DST_GIVE_PVE_DMG_ELEMENT_WATER_RATE": {
+    "id": 102,
+    "key": "DST_GIVE_PVE_DMG_ELEMENT_WATER_RATE"
+  },
+  "DST_GIVE_PVE_DMG_ELEMENT_ELECT_RATE": {
+    "id": 103,
+    "key": "DST_GIVE_PVE_DMG_ELEMENT_ELECT_RATE"
+  },
+  "DST_GIVE_PVE_DMG_ELEMENT_WIND_RATE": {
+    "id": 104,
+    "key": "DST_GIVE_PVE_DMG_ELEMENT_WIND_RATE"
+  },
+  "DST_GIVE_PVE_DMG_ELEMENT_EARTH_RATE": {
+    "id": 105,
+    "key": "DST_GIVE_PVE_DMG_ELEMENT_EARTH_RATE"
+  },
+  "DST_ADJ_ITEM_EQUIP_LEVEL": {
+    "id": 106,
+    "key": "DST_ADJ_ITEM_EQUIP_LEVEL"
+  },
+  "DST_SKILL_LEVELUP_ALL": {
+    "id": 107,
+    "key": "DST_SKILL_LEVELUP_ALL"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_STUN": {
+    "id": 108,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_STUN"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_DARK": {
+    "id": 109,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_DARK"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_POISON": {
+    "id": 110,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_POISON"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_SLOW": {
+    "id": 111,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_SLOW"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_BLEEDING": {
+    "id": 112,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_BLEEDING"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_SILENT": {
+    "id": 113,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_SILENT"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_LOOT": {
+    "id": 114,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_LOOT"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_SETSTONE": {
+    "id": 115,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_SETSTONE"
+  },
+  "DST_GIVE_DMG_RATE_ENEMY_SLEEPING": {
+    "id": 116,
+    "key": "DST_GIVE_DMG_RATE_ENEMY_SLEEPING"
+  },
+  "DST_GOLD": {
+    "id": 10000,
+    "key": "DST_GOLD"
+  },
+  "DST_PXP": {
+    "id": 10001,
+    "key": "DST_PXP"
+  },
+  "DST_RESIST_ALL": {
+    "id": 10002,
+    "key": "DST_RESIST_ALL"
+  },
+  "DST_STAT_ALLUP": {
+    "id": 10003,
+    "name": "All Stats",
+    "key": "DST_STAT_ALLUP"
+  },
+  "DST_HPDMG_UP": {
+    "id": 10004,
+    "name": "Attack power and HP increase",
+    "key": "DST_HPDMG_UP"
+  },
+  "DST_DEFHITRATE_DOWN": {
+    "id": 10005,
+    "name": "Defense power and accuracy decrease",
+    "key": "DST_DEFHITRATE_DOWN"
+  },
+  "DST_CURECHR": {
+    "id": 10006,
+    "key": "DST_CURECHR"
+  },
+  "DST_HP_RECOVERY_RATE": {
+    "id": 10007,
+    "key": "DST_HP_RECOVERY_RATE"
+  },
+  "DST_MP_RECOVERY_RATE": {
+    "id": 10008,
+    "key": "DST_MP_RECOVERY_RATE"
+  },
+  "DST_FP_RECOVERY_RATE": {
+    "id": 10009,
+    "key": "DST_FP_RECOVERY_RATE"
+  },
+  "DST_LOCOMOTION": {
+    "id": 10010,
+    "key": "DST_LOCOMOTION"
+  },
+  "DST_MASTRY_ALL": {
+    "id": 10011,
+    "name": "Mastery: All Elements",
+    "key": "DST_MASTRY_ALL"
+  },
+  "DST_ALL_RECOVERY": {
+    "id": 10012,
+    "key": "DST_ALL_RECOVERY"
+  },
+  "DST_ALL_RECOVERY_RATE": {
+    "id": 10013,
+    "key": "DST_ALL_RECOVERY_RATE"
+  },
+  "DST_KILL_ALL": {
+    "id": 10014,
+    "key": "DST_KILL_ALL"
+  },
+  "DST_KILL_HP_RATE": {
+    "id": 10015,
+    "key": "DST_KILL_HP_RATE"
+  },
+  "DST_KILL_MP_RATE": {
+    "id": 10016,
+    "key": "DST_KILL_MP_RATE"
+  },
+  "DST_KILL_FP_RATE": {
+    "id": 10017,
+    "key": "DST_KILL_FP_RATE"
+  },
+  "DST_KILL_ALL_RATE": {
+    "id": 10018,
+    "key": "DST_KILL_ALL_RATE"
+  },
+  "DST_ALL_DEC_RATE": {
+    "id": 10019,
+    "key": "DST_ALL_DEC_RATE"
+  },
+  "DST_FORCE_DAMAGE_MAX_HP_RATE": {
+    "id": 10020,
+    "key": "DST_FORCE_DAMAGE_MAX_HP_RATE"
+  },
+  "DST_FORCE_DAMAGE_SAFE_HP_RATE": {
+    "id": 10021,
+    "key": "DST_FORCE_DAMAGE_SAFE_HP_RATE"
+  },
+  "DST_FORCE_DAMAGE_VALUE": {
+    "id": 10022,
+    "key": "DST_FORCE_DAMAGE_VALUE"
+  },
+  "DST_HEAL_HP_RATE": {
+    "id": 10030,
+    "key": "DST_HEAL_HP_RATE"
+  },
+  "DST_HEAL_MP_RATE": {
+    "id": 10031,
+    "key": "DST_HEAL_MP_RATE"
+  },
+  "DST_HEAL_FP_RATE": {
+    "id": 10032,
+    "key": "DST_HEAL_FP_RATE"
+  },
+  "DST_HEAL_HP_VALUE": {
+    "id": 10033,
+    "key": "DST_HEAL_HP_VALUE"
+  },
+  "DST_HEAL_MP_VALUE": {
+    "id": 10034,
+    "key": "DST_HEAL_MP_VALUE"
+  },
+  "DST_HEAL_FP_VALUE": {
+    "id": 10035,
+    "key": "DST_HEAL_FP_VALUE"
+  },
+  "DST_DEBUFF_ALL_CLEAR": {
+    "id": 10036,
+    "key": "DST_DEBUFF_ALL_CLEAR"
+  }
+}

@@ -3,36 +3,94 @@ const sql = require("mssql");
 const hashPassword = require("../helpers/hashPassword.helper");
 
 const getAccounts = async (req, res) => {
-  const ACCOUNT_TBL_DETAIL = "ACCOUNT_DBF.dbo.ACCOUNT_TBL_DETAIL";
+  const ACCOUNT_TBL = "ACCOUNT_DBF.dbo.ACCOUNT_TBL";
+  const searchKey = req.query.search;
+  const sort = req.query.sort?.toString().replace(":", " ") || "account asc";
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = (page - 1) * limit;
 
   try {
     const pool = await poolPromise;
-    const accountsResult = await pool
+
+    let countWhereClause = "";
+
+    const countRequest = pool.request();
+
+    if (searchKey) {
+      countWhereClause = "WHERE account LIKE @account";
+      countRequest.input("account", sql.VarChar, `%${searchKey}%`);
+    }
+
+    const countResult = await countRequest.query(`
+      SELECT COUNT(*) AS total FROM ${ACCOUNT_TBL} ${countWhereClause}
+    `);
+    const totalCount = countResult.recordset[0].total;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const request = pool
       .request()
-      .query(`SELECT * FROM ${ACCOUNT_TBL_DETAIL}`);
+      .input("offset", sql.Int, offset)
+      .input("limit", sql.Int, limit);
 
-    const accounts = accountsResult.recordset.reduce((newAccounts, account) => {
-      if (newAccounts[account.m_chLoginAuthority]) {
-        return {
-          ...newAccounts,
-          [account.m_chLoginAuthority]: [
-            ...newAccounts[account.m_chLoginAuthority],
-            account,
-          ],
-        };
-      } else {
-        return {
-          ...newAccounts,
-          [account.m_chLoginAuthority]: [account],
-        };
-      }
-    }, {});
+    let whereClause = "";
 
-    res.json({ success: true, result: accounts });
+    if (searchKey) {
+      whereClause = "WHERE account LIKE @account";
+      request.input("account", sql.VarChar, `%${searchKey}%`);
+    }
+
+    const charactersResult = await request.query(`
+        SELECT * FROM ${ACCOUNT_TBL}
+        ${whereClause}
+        ORDER BY ${sort}
+        OFFSET @offset ROWS
+        FETCH NEXT @limit ROWS ONLY;
+      `);
+
+    res.json({
+      success: true,
+      page,
+      limit,
+      total: totalCount,
+      totalPages,
+      result: charactersResult.recordset,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+// const getAccounts = async (req, res) => {
+//   const ACCOUNT_TBL_DETAIL = "ACCOUNT_DBF.dbo.ACCOUNT_TBL_DETAIL";
+
+//   try {
+//     const pool = await poolPromise;
+//     const accountsResult = await pool
+//       .request()
+//       .query(`SELECT * FROM ${ACCOUNT_TBL_DETAIL}`);
+
+//     const accounts = accountsResult.recordset.reduce((newAccounts, account) => {
+//       if (newAccounts[account.m_chLoginAuthority]) {
+//         return {
+//           ...newAccounts,
+//           [account.m_chLoginAuthority]: [
+//             ...newAccounts[account.m_chLoginAuthority],
+//             account,
+//           ],
+//         };
+//       } else {
+//         return {
+//           ...newAccounts,
+//           [account.m_chLoginAuthority]: [account],
+//         };
+//       }
+//     }, {});
+
+//     res.json({ success: true, result: accounts });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 
 const getAccount = async (req, res) => {
   const account = req.params.account;

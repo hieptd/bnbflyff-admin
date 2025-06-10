@@ -9,16 +9,38 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/auth/accounts:
+ * /auth/accounts:
  *   get:
- *     summary: Get account list (authenticated)
  *     tags:
  *       - Accounts
- *     security:
- *       - cookieAuth: []
+ *     summary: Get a paginated list of accounts
+ *     description: Retrieves accounts with optional search and pagination.
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Filter by account name
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort field and direction (e.g., account:asc)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page
  *     responses:
  *       200:
- *         description: Returns a list of accounts
+ *         description: A list of accounts
  *         content:
  *           application/json:
  *             schema:
@@ -27,12 +49,33 @@ const router = express.Router();
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 total:
+ *                   type: integer
+ *                   example: 120
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 12
  *                 result:
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       account:
+ *                         type: string
+ *                         example: testuser01
+ *                       id:
+ *                         type: integer
+ *                         example: 10001
  *       401:
- *         description: Unauthorized - not authenticated or not in allowed list
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
 router.get("/auth/accounts", authenticate, getAccounts);
 

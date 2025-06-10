@@ -4,7 +4,8 @@ const sql = require("mssql");
 const getCharacters = async (req, res) => {
   const account = req.params.account;
   const CHARACTER_TBL = "CHARACTER_01_DBF.dbo.CHARACTER_TBL";
-  const cols = req.query.cols || "*";
+  const searchKey = req.query.search;
+  const sort = req.query.sort?.toString().replace(":", " ") || "m_idPlayer asc";
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
@@ -20,6 +21,11 @@ const getCharacters = async (req, res) => {
       countRequest.input("account", sql.VarChar, account);
     }
 
+    if (searchKey) {
+      countWhereClause = "WHERE m_szName LIKE @m_szName";
+      countRequest.input("m_szName", sql.VarChar, `%${searchKey}%`);
+    }
+
     const countResult = await countRequest.query(`
       SELECT COUNT(*) AS total FROM ${CHARACTER_TBL} ${countWhereClause}
     `);
@@ -31,15 +37,22 @@ const getCharacters = async (req, res) => {
       .input("offset", sql.Int, offset)
       .input("limit", sql.Int, limit);
 
+    let whereClause = "";
+
     if (account) {
       whereClause = "WHERE account = @account";
       request.input("account", sql.VarChar, account);
     }
 
+    if (searchKey) {
+      whereClause = "WHERE m_szName LIKE @m_szName";
+      request.input("m_szName", sql.VarChar, `%${searchKey}%`);
+    }
+
     const charactersResult = await request.query(`
-        SELECT ${cols} FROM ${CHARACTER_TBL}
+        SELECT * FROM ${CHARACTER_TBL}
         ${whereClause}
-        ORDER BY m_idPlayer
+        ORDER BY ${sort}
         OFFSET @offset ROWS
         FETCH NEXT @limit ROWS ONLY;
       `);
@@ -58,7 +71,6 @@ const getCharacters = async (req, res) => {
 };
 
 const getCharacter = async (req, res) => {
-  const m_szName = req.params.m_szName;
   const m_idPlayer = req.params.m_idPlayer;
   const CHARACTER_TBL = "CHARACTER_01_DBF.dbo.CHARACTER_TBL";
 
@@ -68,13 +80,8 @@ const getCharacter = async (req, res) => {
     let whereClause = "";
     const request = pool.request();
 
-    if (m_szName) {
-      whereClause += "WHERE m_szName = @m_szName";
-      request.input("m_szName", sql.VarChar, m_szName);
-    } else if (m_idPlayer) {
-      whereClause += "WHERE m_idPlayer = @m_idPlayer";
-      request.input("m_idPlayer", sql.VarChar, m_idPlayer);
-    }
+    whereClause += "WHERE m_idPlayer = @m_idPlayer";
+    request.input("m_idPlayer", sql.VarChar, m_idPlayer);
 
     const characterResult = await request.query(`
         SELECT * FROM ${CHARACTER_TBL}

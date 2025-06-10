@@ -3,9 +3,11 @@ const router = express.Router();
 
 const loginRoutes = require("./login.route");
 const accountRoutes = require("./accounts.route");
+const authRoutes = require("./auth.route");
 const characterRoutes = require("./characters.route");
 const currenciesRoutes = require("./currencies.route");
 const voteSitesRoutes = require("./voteSites.route");
+const inventoryRoutes = require("./inventory.route");
 
 /**
  * @swagger
@@ -21,8 +23,11 @@ router.get("/health-check", (req, res) => {
 });
 
 router.use(loginRoutes);
+router.use(authRoutes);
 router.use(accountRoutes);
 router.use(characterRoutes);
 router.use(currenciesRoutes);
 router.use(voteSitesRoutes);
+router.use(inventoryRoutes);
+
 module.exports = router;

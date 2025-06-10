@@ -23,7 +23,6 @@ const login = async (req, res) => {
         `SELECT * FROM ${ACCOUNT_TBL_DETAIL} WHERE account = @account AND m_chLoginAuthority = 'P'`
       );
 
-    console.log(accountDetailResult.recordset);
     if (accountDetailResult.recordset.length === 0) {
       return res
         .status(400)
@@ -53,7 +52,7 @@ const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development", // false for local dev without HTTPS
-      sameSite: "lax", 
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 

@@ -8,34 +8,44 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/auth/characters:
+ * /auth/characters:
  *   get:
- *     summary: Get character list
  *     tags:
  *       - Characters
- *     security:
- *       - cookieAuth: []
+ *     summary: Get a paginated list of characters
  *     parameters:
  *       - in: query
- *         name: cols
+ *         name: search
  *         schema:
  *           type: string
- *         description: Columns to select (optional)
+ *         description: Search characters by name
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort format (e.g., m_idPlayer:asc)
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
- *         description: Page number (optional, default is 1)
+ *         description: Page number for pagination
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
- *         description: Items per page (optional, default is 10)
+ *         description: Number of characters per page
+ *       - in: query
+ *         name: account
+ *         schema:
+ *           type: string
+ *         description: Filter by account
  *     responses:
  *       200:
- *         description: Success
+ *         description: A list of characters
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
 
 router.get("/auth/characters", authenticate, getCharacters);
