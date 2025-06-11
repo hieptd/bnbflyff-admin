@@ -1,53 +1,13 @@
 const parse = require("../helpers/inventoryParser.helper");
 
-function inventoryResource(characterData, backpackData, bankData) {
+async function inventoryResource(
+  characterData,
+  backpackData = null,
+  bankData = null
+) {
   const { m_szName, m_Inventory, m_apIndex, m_extInventory } = characterData;
-  let { m_Bank, m_apIndex_Bank, m_extBank } = {};
 
-  let bank = [];
-  
-  if (bankData) {
-    m_Bank = bankData.m_Bank;
-    m_apIndex_Bank = bankData.m_Bank;
-    m_extBank = bankData.m_Bank;
-  }
-
-  let { backpack1, backpack2, backpack3 } = {
-    backpack1: [],
-    backpack2: [],
-    backpack3: [],
-  };
-
-  if (backpackData && backpackData.length >= 1) {
-    // Backpack 8 slots
-    backpack1 = parse({
-      items: backpackData[0].szItem,
-      indexes: backpackData[0].szIndex,
-      itemExtensions: backpackData[0].szExt,
-      startIndex: 0,
-      endIndex: 8,
-    });
-
-    // Backpack 1 - 24 slots
-    backpack2 = parse({
-      items: backpackData[1].szItem,
-      indexes: backpackData[1].szIndex,
-      itemExtensions: backpackData[1].szExt,
-      startIndex: 0,
-      endIndex: 24,
-    });
-
-    // Backpack 2 - 24 slots
-    backpack3 = parse({
-      items: backpackData[2].szItem,
-      indexes: backpackData[2].szIndex,
-      itemExtensions: backpackData[2].szExt,
-      startIndex: 0,
-      endIndex: 24,
-    });
-  }
-
-  const inventory = parse({
+  const inventory = await parse({
     items: m_Inventory,
     indexes: m_apIndex,
     itemExtensions: m_extInventory,
@@ -55,7 +15,7 @@ function inventoryResource(characterData, backpackData, bankData) {
     endIndex: 42,
   });
 
-  const equipment = parse({
+  const equipment = await parse({
     items: m_Inventory,
     indexes: m_apIndex,
     itemExtensions: m_extInventory,
@@ -63,15 +23,32 @@ function inventoryResource(characterData, backpackData, bankData) {
     endIndex: 80,
   });
 
-  if (bankData) {
-    bank = parse({
-      items: m_Bank,
-      indexes: m_apIndex_Bank,
-      itemExtensions: m_extBank,
-      startIndex: 0,
-      endIndex: 42,
-    });
-  }
+  const bank = bankData
+    ? await parse({
+        items: bankData.m_Bank,
+        indexes: bankData.m_apIndex_Bank,
+        itemExtensions: bankData.m_extBank,
+        startIndex: 0,
+        endIndex: 42,
+      })
+    : [];
+
+  const [backpack1, backpack2, backpack3] = await Promise.all(
+    [0, 1, 2].map(async (index) => {
+      if (!backpackData) return [];
+      const pack = backpackData[index];
+      if (!pack) return [];
+      const slotCount = index === 0 ? 8 : 24;
+      return await parse({
+        items: pack.szItem,
+        indexes: pack.szIndex,
+        itemExtensions: pack.szExt,
+        startIndex: 0,
+        endIndex: slotCount,
+      });
+    })
+  );
+
   return {
     m_szName,
     inventory,

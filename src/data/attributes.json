@@ -129,6 +129,7 @@
   },
   "DST_RESIST_MAGIC": {
     "id": 27,
+    "name": "Magic-defense",
     "key": "DST_RESIST_MAGIC"
   },
   "DST_RESIST_ELECTRICITY": {
@@ -287,6 +288,7 @@
   },
   "DST_CHR_DMG": {
     "id": 63,
+    "name": "Additional Damage",
     "key": "DST_CHR_DMG"
   },
   "DST_CHRSTATE": {
@@ -418,6 +420,8 @@
   },
   "DST_RESIST_MAGIC_RATE": {
     "id": 91,
+    "name": "Magic-defense rate",
+    "isPercentage": true,
     "key": "DST_RESIST_MAGIC_RATE"
   },
   "DST_GIFTBOX": {

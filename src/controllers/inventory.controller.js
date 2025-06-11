@@ -83,12 +83,18 @@ const getInventory = async (req, res) => {
       backpacks = backpackResult.recordsets[0];
     }
 
+    const inventoryResourceObj = await inventoryResource(
+      character,
+      backpacks,
+      bank
+    );
+
     // Return structured response
     return res.json({
       success: true,
       result: {
         m_szName: character.m_szName,
-        ...inventoryResource(character, backpacks, bank),
+        ...inventoryResourceObj,
       },
     });
   } catch (error) {
