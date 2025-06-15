@@ -3,39 +3,36 @@ const attributesData = require("../data/attributes.json");
 const { getItemById } = require("./itemData.helper.js");
 
 const IMAGE_SERVER = process.env.IMG_SERVER || "http://localhost:5173/";
+const FLYFF_MODEL_CHANGE = parseInt(process.env.FLYFF_MODEL_CHANGE, 10) || 0;
 
-function parseItems(rawItems, rawItemExtensions, partsCount = 4) {
+function parseItems(rawItems, rawItemExtensions, partsCount = 4, findId = 0) {
   const extData = parseItemExtensions(rawItemExtensions, partsCount);
   return rawItems.split("/").map((entry, index) => {
     if (!entry) return null;
+    const entryArr = entry.split(",");
+    let itemId = entryArr[1];
+    const slotIndex = entryArr[0];
+    const quantity = entryArr[5];
+    const serialNumber = entryArr[11];
+    const enhancement = entryArr[12];
+    const elementEnhancement = entryArr[14];
+    const originalItemId = entryArr[17];
 
-    const [
-      slotIndex,
-      itemId,
-      ,
-      ,
-      ,
-      quantity,
-      ,
-      ,
-      ,
-      ,
-      ,
-      serialNumber = 1,
-      enhancement,
-      ,
-      elementEnhancement,
-    ] = entry.split(",");
+    const extObj = { slotIndex, serialNumber };
+
+    if (findId > 0 && findId != itemId) {
+      return extObj;
+    }
 
     return {
-      slotIndex,
+      ...extObj,
       itemId,
       quantity,
-      serialNumber,
       randomOpt: extData[index]?.randomOpt,
       randomOptParts: extData[index]?.parts,
       enhancement,
       elementEnhancement,
+      originalItemId: originalItemId ? parseInt(originalItemId) : null,
       raw: entry,
     };
   });
@@ -58,7 +55,7 @@ function sliceSlots(data, start, end) {
 async function fetchItemData(itemId) {
   const item = await getItemById(itemId);
   if (!item) {
-    console.warn(`Item ID ${itemId} not found in mergedItems.json`);
+    // console.warn(`Item ID ${itemId} not found in mergedItems.json`);
     return { image: "", displayName: "Item not found!" };
   }
 
@@ -93,6 +90,18 @@ async function parseSlotDetails(slots, inventory) {
         enhancement: item?.enhancement,
         elementEnhancement: item?.elementEnhancement,
       };
+
+      // FLYFF_MODEL_CHANGE === 1
+      if (FLYFF_MODEL_CHANGE === 1 && parseInt(item?.originalItemId) >= 10) {
+        const { image: ogImage, displayName: ogDisplayName } =
+          await fetchItemData(item?.originalItemId);
+
+        slotInfo.originalModel = {
+          image: ogImage ? IMAGE_SERVER + ogImage.toLowerCase() : "",
+          displayName: ogDisplayName,
+          itemId: item?.originalItemId,
+        };
+      }
 
       if (itemId) {
         const {
@@ -130,7 +139,7 @@ async function parseSlotDetails(slots, inventory) {
           };
         }
 
-        if (item.randomOpt) {
+        if (item?.randomOpt) {
           slotInfo = {
             ...slotInfo,
             ...RandomOptionDecoder.decode(item.randomOpt),
@@ -162,11 +171,12 @@ const parse = async ({
   itemExtensions,
   startIndex,
   endIndex,
+  findId = 0,
 }) => {
+  if (!items || !indexes || !itemExtensions) return [];
   const slots = sliceSlots(indexes, startIndex, endIndex);
-  const inventory = parseItems(items, itemExtensions);
+  const inventory = parseItems(items, itemExtensions, 4, findId);
   const slotItems = await parseSlotDetails(slots, inventory);
-
   return slotItems.filter((item) => item.itemId !== null);
 };
 

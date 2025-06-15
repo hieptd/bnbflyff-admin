@@ -1,10 +1,13 @@
 const fs = require("fs/promises");
 const path = require("path");
+const RandomOptionDecoder = require("./RandomOptionDecoder");
+const attributesData = require("../data/attributes.json");
 
 const CHUNKS_DIR = path.resolve(__dirname, "../data/chunks");
 
 const chunkCache = {}; // Cache contents
 let chunkIndex = []; // Array of { file, minId, maxId }
+const IMAGE_SERVER = process.env.IMG_SERVER || "http://localhost:5173/";
 
 async function initializeChunks() {
   try {
@@ -25,7 +28,7 @@ async function initializeChunks() {
       chunkIndex.push({ file, minId, maxId });
     }
 
-    console.log(`✅ Indexed ${chunkIndex.length} chunks`);
+    // console.log(`✅ Indexed ${chunkIndex.length} chunks`);
   } catch (err) {
     console.error("❌ Error initializing chunks:", err.message);
   }
@@ -56,10 +59,89 @@ async function getItemById(itemId) {
   }
 
   const chunk = chunkCache[chunkMeta.file];
-  return chunk.find((item) => item.id == itemId) || null;
+  const item = chunk.find((item) => item.id == itemId);
+  return item
+    ? { ...item, imageFullPath: `${IMAGE_SERVER + item.image.toLowerCase()}` }
+    : null;
 }
+
+function parseStat(stat, statNum = 1) {
+  const statProp = stat[`stat${statNum}Prop`]?.trim();
+  const statVal = stat[`stat${statNum}Val`];
+  const attributeInfo = attributesData[statProp] || { name: statProp };
+
+  const isSpecialAdj = statProp === "DST_ATTACKSPEED";
+  const value = isSpecialAdj ? Math.floor(statVal / 20) : statVal;
+
+  return {
+    label: attributeInfo.name,
+    value: `${value}${attributeInfo.isPercentage ? "%" : ""}`,
+  };
+}
+
+const formatItemData = (item) => {
+  let formattedItem = {};
+  if (item) {
+    const {
+      image,
+      displayName,
+      description,
+      itemKind1,
+      abilityMin,
+      abilityMax,
+      type,
+      stat1,
+      stat2,
+      stat3,
+      accessoryBonuses,
+    } = item;
+
+    if (accessoryBonuses) {
+      formattedItem.accessoryBonus = accessoryBonuses
+        .find(({ level }) => level == item?.enhancement)
+        ?.bonuses.map(
+          (stat) =>
+            `${attributesData[stat.prop]?.name || stat.prop} +${stat.value}`
+        );
+    }
+
+    if (itemKind1 === "IK1_WEAPON") {
+      formattedItem = {
+        ...formattedItem,
+        abilityDisplay: `Attack: ${abilityMin} ~ ${abilityMax} `,
+      };
+    } else if (itemKind1 === "IK1_ARMOR") {
+      formattedItem = {
+        ...formattedItem,
+        abilityDisplay: `DEF: ${abilityMin} ~ ${abilityMax} `,
+      };
+    }
+
+    if (item.randomOpt) {
+      formattedItem = {
+        ...formattedItem,
+        ...RandomOptionDecoder.decode(item.randomOpt),
+      };
+    }
+
+    if (stat1?.stat1Prop) formattedItem.stat1 = parseStat(stat1, 1);
+    if (stat2?.stat2Prop) formattedItem.stat2 = parseStat(stat2, 2);
+    if (stat3?.stat3Prop) formattedItem.stat3 = parseStat(stat3, 3);
+
+    formattedItem = {
+      ...formattedItem,
+      displayName,
+      description,
+      type,
+      image: image ? IMAGE_SERVER + image.toLowerCase() : "",
+    };
+  }
+
+  return formattedItem;
+};
 
 module.exports = {
   getItemById,
   initializeChunks,
+  formatItemData,
 };

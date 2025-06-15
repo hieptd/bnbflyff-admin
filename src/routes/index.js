@@ -8,6 +8,8 @@ const characterRoutes = require("./characters.route");
 const currenciesRoutes = require("./currencies.route");
 const voteSitesRoutes = require("./voteSites.route");
 const inventoryRoutes = require("./inventory.route");
+const tradeLogsRoutes = require("./tradeLogs.route");
+const itemRoutes = require("./items.route");
 
 /**
  * @swagger
@@ -29,5 +31,7 @@ router.use(characterRoutes);
 router.use(currenciesRoutes);
 router.use(voteSitesRoutes);
 router.use(inventoryRoutes);
+router.use(tradeLogsRoutes);
+router.use(itemRoutes);
 
 module.exports = router;

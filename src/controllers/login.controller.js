@@ -26,7 +26,7 @@ const login = async (req, res) => {
     if (accountDetailResult.recordset.length === 0) {
       return res
         .status(400)
-        .json({ message: "User not found", accountDetailResult });
+        .json({ message: "User not found 1", accountDetailResult });
     }
 
     const user = accountDetailResult.recordset[0];

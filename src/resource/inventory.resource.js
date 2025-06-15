@@ -1,4 +1,12 @@
 const parse = require("../helpers/inventoryParser.helper");
+const INVENTORY_SIZE = parseInt(process.env.INVENTORY_SIZE || 42);
+
+const getInventorySize = () => {
+  return {
+    inventory: { startIndex: 0, endIndex: INVENTORY_SIZE },
+    equipment: { startIndex: INVENTORY_SIZE, endIndex: INVENTORY_SIZE + 38 },
+  };
+};
 
 async function inventoryResource(
   characterData,
@@ -6,21 +14,22 @@ async function inventoryResource(
   bankData = null
 ) {
   const { m_szName, m_Inventory, m_apIndex, m_extInventory } = characterData;
+  const inventorySize = getInventorySize();
 
   const inventory = await parse({
     items: m_Inventory,
     indexes: m_apIndex,
     itemExtensions: m_extInventory,
-    startIndex: 0,
-    endIndex: 42,
+    startIndex: inventorySize.inventory.startIndex,
+    endIndex: inventorySize.inventory.endIndex,
   });
 
   const equipment = await parse({
     items: m_Inventory,
     indexes: m_apIndex,
     itemExtensions: m_extInventory,
-    startIndex: 42,
-    endIndex: 80,
+    startIndex: inventorySize.equipment.startIndex,
+    endIndex: inventorySize.equipment.endIndex,
   });
 
   const bank = bankData
