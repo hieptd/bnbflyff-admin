@@ -1,0 +1,10 @@
+{
+  "globalEnvs": ["demo"],
+
+  "routes": [
+    {
+      "path": "/api/auth/gamemasters",
+      "methods": ["GET", "POST"]
+    }
+  ]
+}

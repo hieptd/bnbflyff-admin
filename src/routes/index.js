@@ -5,11 +5,13 @@ const loginRoutes = require("./login.route");
 const accountRoutes = require("./accounts.route");
 const authRoutes = require("./auth.route");
 const characterRoutes = require("./characters.route");
+const guildRoutes = require("./guild.route");
 const currenciesRoutes = require("./currencies.route");
 const voteSitesRoutes = require("./voteSites.route");
 const inventoryRoutes = require("./inventory.route");
 const tradeLogsRoutes = require("./tradeLogs.route");
 const itemRoutes = require("./items.route");
+const gameMasterRoutes = require("./gamemaster.route");
 
 /**
  * @swagger
@@ -28,10 +30,12 @@ router.use(loginRoutes);
 router.use(authRoutes);
 router.use(accountRoutes);
 router.use(characterRoutes);
+router.use(guildRoutes);
 router.use(currenciesRoutes);
 router.use(voteSitesRoutes);
 router.use(inventoryRoutes);
 router.use(tradeLogsRoutes);
 router.use(itemRoutes);
+router.use(gameMasterRoutes);
 
 module.exports = router;

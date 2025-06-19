@@ -56,7 +56,10 @@ async function fetchItemData(itemId) {
   const item = await getItemById(itemId);
   if (!item) {
     // console.warn(`Item ID ${itemId} not found in mergedItems.json`);
-    return { image: "", displayName: "Item not found!" };
+    return {
+      image: `${IMAGE_SERVER}/icon_default.jpg`,
+      displayName: "Item not found!",
+    };
   }
 
   return item;

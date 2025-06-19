@@ -11,6 +11,7 @@ const enforceHttps = require("./middlewares/enforceHttps");
 const ipWhitelist = require("./middlewares/ipWhitelist");
 
 const routes = require("./routes");
+const checkDisabledRoutes = require("./middlewares/checkDisabledRoutes");
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use(rateLimiter);
 app.use(createCorsMiddleware());
 app.use(enforceHttps);
 app.use(ipWhitelist);
-
+app.use(checkDisabledRoutes);
 // Documentation
 app.use(
   "/api-docs",
