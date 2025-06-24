@@ -52,7 +52,7 @@ const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development", // false for local dev without HTTPS
-      sameSite: process.env.NODE_ENV !== "development" ? "lax" : "none",
+      sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
