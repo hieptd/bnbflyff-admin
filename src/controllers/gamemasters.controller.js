@@ -134,7 +134,7 @@ const getGameMasterLogs = async (req, res) => {
     request.input("offset", sql.Int, offset);
     request.input("limit", sql.Int, limit);
 
-    let searchCondition = "m_szWords LIKE '/%'";
+    let searchCondition = "m_szWords LIKE '/%' AND m_szWords NOT LIKE '/say%'";
     if (searchKey) {
       const keyword =
         searchMode === "startsWith" ? `${searchKey}%` : `%${searchKey}%`;

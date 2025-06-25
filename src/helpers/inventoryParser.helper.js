@@ -57,8 +57,9 @@ async function fetchItemData(itemId) {
   if (!item) {
     // console.warn(`Item ID ${itemId} not found in mergedItems.json`);
     return {
-      image: `${IMAGE_SERVER}/icon_default.jpg`,
+      image: `icon_default.jpg`,
       displayName: "Item not found!",
+      description: "Please update your data/chunks/items*.json",
     };
   }
 
