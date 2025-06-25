@@ -3,7 +3,7 @@ const sql = require("mssql");
 const hashPassword = require("../helpers/hashPassword.helper");
 
 const getAccounts = async (req, res) => {
-  const ACCOUNT_TBL = "ACCOUNT_DBF.dbo.ACCOUNT_TBL";
+  const ACCOUNT_TBL_DETAIL = "ACCOUNT_DBF.dbo.ACCOUNT_TBL_DETAIL";
   const searchKey = req.query.search;
   const sort = req.query.sort?.toString().replace(":", " ") || "account asc";
   const page = parseInt(req.query.page) || 1;
@@ -23,7 +23,7 @@ const getAccounts = async (req, res) => {
     }
 
     const countResult = await countRequest.query(`
-      SELECT COUNT(*) AS total FROM ${ACCOUNT_TBL} ${countWhereClause}
+      SELECT COUNT(*) AS total FROM ${ACCOUNT_TBL_DETAIL} ${countWhereClause}
     `);
     const totalCount = countResult.recordset[0].total;
     const totalPages = Math.ceil(totalCount / limit);
@@ -40,8 +40,8 @@ const getAccounts = async (req, res) => {
       request.input("account", sql.VarChar, `%${searchKey}%`);
     }
 
-    const charactersResult = await request.query(`
-        SELECT * FROM ${ACCOUNT_TBL}
+    const accountsResult = await request.query(`
+        SELECT * FROM ${ACCOUNT_TBL_DETAIL}
         ${whereClause}
         ORDER BY ${sort}
         OFFSET @offset ROWS
@@ -54,7 +54,7 @@ const getAccounts = async (req, res) => {
       limit,
       total: totalCount,
       totalPages,
-      result: charactersResult.recordset,
+      result: accountsResult.recordset,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
