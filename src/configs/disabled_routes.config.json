@@ -4,7 +4,7 @@
   "routes": [
     {
       "path": "/api/auth/gamemasters",
-      "methods": ["GET", "POST"]
+      "methods": ["POST"]
     }
   ]
 }

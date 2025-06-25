@@ -56,7 +56,7 @@ const getGuildMembers = async (req, res) => {
   const CHARACTER_TBL = "CHARACTER_01_DBF.dbo.CHARACTER_TBL";
 
   const sort =
-    req.query.sort?.toString().replace(":", " ") || "m_nGiveGold DESC";
+    req.query.sort?.toString().replace(":", " ") || "m_nMemberLv";
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;

@@ -15,7 +15,6 @@ const checkDisabledRoutes = require("./middlewares/checkDisabledRoutes");
 
 const app = express();
 
-// Basic setup
 app.use(morgan("tiny"));
 app.use(express.json());
 
@@ -27,6 +26,7 @@ app.use(createCorsMiddleware());
 app.use(enforceHttps);
 app.use(ipWhitelist);
 app.use(checkDisabledRoutes);
+
 // Documentation
 app.use(
   "/api-docs",

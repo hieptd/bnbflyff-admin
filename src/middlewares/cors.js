@@ -15,6 +15,12 @@ module.exports = function createCorsMiddleware() {
     },
     credentials: true,
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Cookie",
+    ],
+    exposedHeaders: ["Set-Cookie"],
   });
 };

@@ -1,4 +1,8 @@
 module.exports = function ipWhitelist(req, res, next) {
+  const currentEnv = process.env.NODE_ENV;
+
+  if (currentEnv === "demo") return next();
+
   const whitelist = process.env.WHITELISTED_IPS.split(",").map((ip) =>
     ip.trim()
   );
