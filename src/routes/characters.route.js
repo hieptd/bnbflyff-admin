@@ -3,7 +3,11 @@ const authenticate = require("../middlewares/authenticate");
 const {
   getCharacters,
   getCharacter,
+  renameCharacter,
+  getChangeNameLogs,
 } = require("../controllers/characters.controller");
+const validateBody = require("../middlewares/validateBody");
+const renameCharacterSchema = require("../validations/renameCharacter.validation");
 const router = express.Router();
 
 /**
@@ -161,5 +165,91 @@ router.get("/auth/characters/name/:m_szName", authenticate, getCharacter);
  *         description: Character not found
  */
 router.get("/auth/characters/id/:m_idPlayer", authenticate, getCharacter);
+
+/**
+ * @swagger
+ * /auth/characters/{m_idPlayer}:
+ *   patch:
+ *     summary: Rename character
+ *     tags:
+ *       - Characters
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: m_idPlayer
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Character ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               m_szName:
+ *                 type: string
+ *                 maxLength: 32
+ *     responses:
+ *       200:
+ *         description: Character renamed successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Character not found
+ */
+router.patch(
+  "/auth/characters/:m_idPlayer",
+  authenticate,
+  validateBody(renameCharacterSchema),
+  renameCharacter
+);
+
+/**
+ * @swagger
+ * /auth/characters/{idPlayer}/change-name-logs:
+ *   get:
+ *     summary: Get rename logs by idPlayer
+ *     tags:
+ *       - Characters
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: idPlayer
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Character ID (7 digits)
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort format (e.g., ChangeDt:desc)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of logs per page
+ *     responses:
+ *       200:
+ *         description: Rename logs returned
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/auth/characters/:idPlayer/change-name-logs",
+  authenticate,
+  getChangeNameLogs
+);
 
 module.exports = router;

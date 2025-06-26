@@ -14,7 +14,7 @@ module.exports = function createCorsMiddleware() {
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PATCH", "PUT"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",

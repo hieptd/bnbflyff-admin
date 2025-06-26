@@ -1,11 +1,15 @@
 const express = require("express");
 const authenticate = require("../middlewares/authenticate");
+const validateBody = require("../middlewares/validateBody");
 
 const {
   getGuilds,
   getGuildMembers,
   getGuildBank,
+  getGuildRenameLogs,
+  renameGuild,
 } = require("../controllers/guilds.controller");
+const renameGuildSchema = require("../validations/renameGuild.validation");
 
 const router = express.Router();
 
@@ -115,5 +119,93 @@ router.get("/auth/guilds/:m_idGuild/members", authenticate, getGuildMembers);
  *         description: Internal server error
  */
 router.get("/auth/guilds/:m_idGuild/bank", authenticate, getGuildBank);
+
+/**
+ * @swagger
+ * /api/auth/guilds/{m_idGuild}:
+ *   patch:
+ *     tags:
+ *       - Guilds
+ *     summary: Rename a guild
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: m_idGuild
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Guild ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               m_szName:
+ *                 type: string
+ *                 maxLength: 32
+ *     responses:
+ *       200:
+ *         description: Guild renamed successfully
+ *       400:
+ *         description: Invalid input or name already exists
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Guild not found
+ */
+router.patch(
+  "/auth/guilds/:m_idGuild",
+  authenticate,
+  validateBody(renameGuildSchema),
+  renameGuild
+);
+
+/**
+ * @swagger
+ * /api/auth/guilds/{m_idGuild}/change-name-logs:
+ *   get:
+ *     tags:
+ *       - Guilds
+ *     summary: Get change name logs for a guild
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: m_idGuild
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Guild ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort format (e.g., ChangeDt:desc)
+ *     responses:
+ *       200:
+ *         description: Rename logs returned successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/auth/guilds/:m_idGuild/change-name-logs",
+  authenticate,
+  getGuildRenameLogs
+);
 
 module.exports = router;
