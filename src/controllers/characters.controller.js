@@ -1,5 +1,6 @@
 const { poolPromise } = require("../database/database");
 const sql = require("mssql");
+const allowedAttrs = require("../configs/mail_attributes.config");
 
 const getCharacters = async (req, res) => {
   const account = req.params.account;
@@ -224,9 +225,82 @@ const getChangeNameLogs = async (req, res) => {
   }
 };
 
+const mailPlayer = async (req, res) => {
+  const {
+    idReceiver,
+    idSender = "0000000",
+    szTitle,
+    szText,
+    dwItemId,
+    nItemNum = 1,
+    serverindex = "01",
+    attributes = {},
+  } = req.body;
+
+  if (!idReceiver || !szTitle || !dwItemId) {
+    return res.status(400).json({
+      message: "idReceiver, szTitle, and dwItemId are required.",
+    });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const nMail = Math.floor(Math.random() * 100000000);
+    const tmCreate = Math.floor(Date.now() / 1000);
+
+    const finalAttrs = {};
+
+    for (const key in allowedAttrs) {
+      finalAttrs[key] =
+        Object.prototype.hasOwnProperty.call(attributes, key) &&
+        attributes[key] !== undefined
+          ? attributes[key]
+          : allowedAttrs[key] === sql.VarChar
+          ? ""
+          : 0;
+    }
+
+    for (const [key, value] of Object.entries(finalAttrs)) {
+      request.input(key, allowedAttrs[key], value);
+    }
+
+    const request = pool
+      .request()
+      .input("iGu", sql.Char(2), "A1")
+      .input("nMail", sql.Int, nMail)
+      .input("serverindex", sql.Char(2), serverindex)
+      .input("idReceiver", sql.Char(7), idReceiver)
+      .input("idSender", sql.Char(7), idSender)
+      .input("nGold", sql.Int, 0)
+      .input("tmCreate", sql.Int, tmCreate)
+      .input("byRead", sql.Int, 0)
+      .input("szTitle", sql.VarChar(128), szTitle)
+      .input("szText", sql.VarChar(1024), szText)
+      .input("dwItemId", sql.Int, dwItemId)
+      .input("nItemNum", sql.Int, nItemNum);
+
+    for (const [key, value] of Object.entries(finalAttrs)) {
+      request.input(key, allowedAttrs[key], value);
+    }
+
+    await request.execute("CHARACTER_01_DBF.dbo.MAIL_STR");
+
+    res.json({
+      success: true,
+      message: `Item ${dwItemId} sent to player ${idReceiver} via mail.`,
+    });
+  } catch (err) {
+    console.error("Mail item error:", err);
+    res
+      .status(500)
+      .json({ message: "Failed to send mail.", error: err.message });
+  }
+};
+
 module.exports = {
   getCharacters,
   getCharacter,
   renameCharacter,
   getChangeNameLogs,
+  mailPlayer,
 };

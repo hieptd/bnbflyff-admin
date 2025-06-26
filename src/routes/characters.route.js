@@ -5,6 +5,7 @@ const {
   getCharacter,
   renameCharacter,
   getChangeNameLogs,
+  mailPlayer,
 } = require("../controllers/characters.controller");
 const validateBody = require("../middlewares/validateBody");
 const renameCharacterSchema = require("../validations/renameCharacter.validation");
@@ -251,5 +252,62 @@ router.get(
   authenticate,
   getChangeNameLogs
 );
+
+/**
+ * @swagger
+ * /auth/characters/mail:
+ *   post:
+ *     summary: Send an item to a player via in-game mail
+ *     tags:
+ *       - Characters
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idReceiver
+ *               - szTitle
+ *               - szText
+ *               - dwItemId
+ *             properties:
+ *               idReceiver:
+ *                 type: string
+ *                 example: "1234567"
+ *               idSender:
+ *                 type: string
+ *                 example: "7654321"
+ *               szTitle:
+ *                 type: string
+ *                 example: "Gift"
+ *               szText:
+ *                 type: string
+ *                 example: "Here is your reward!"
+ *               dwItemId:
+ *                 type: integer
+ *                 example: 1123
+ *               nItemNum:
+ *                 type: integer
+ *                 example: 1
+ *               serverindex:
+ *                 type: string
+ *                 example: "01"
+ *               attributes:
+ *                 type: object
+ *                 description: Optional mail attributes (e.g., options, HP, pet data)
+ *     responses:
+ *       200:
+ *         description: Mail sent successfully
+ *       400:
+ *         description: Missing or invalid data
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.post("/auth/characters/mail", authenticate, mailPlayer);
 
 module.exports = router;

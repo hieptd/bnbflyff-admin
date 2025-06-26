@@ -8,6 +8,7 @@ const {
   getGuildBank,
   getGuildRenameLogs,
   renameGuild,
+  getGuildBankHistory,
 } = require("../controllers/guilds.controller");
 const renameGuildSchema = require("../validations/renameGuild.validation");
 
@@ -206,6 +207,51 @@ router.get(
   "/auth/guilds/:m_idGuild/change-name-logs",
   authenticate,
   getGuildRenameLogs
+);
+
+/**
+ * @swagger
+ * /auth/guilds/{m_idGuild}/bank-history:
+ *   get:
+ *     summary: Get guild bank transaction history
+ *     tags:
+ *       - Guilds
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: m_idGuild
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The guild ID (6 digits)
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort order (e.g., s_date:desc)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of results per page
+ *     responses:
+ *       200:
+ *         description: Bank history retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/auth/guilds/:m_idGuild/bank-history",
+  authenticate,
+  getGuildBankHistory
 );
 
 module.exports = router;

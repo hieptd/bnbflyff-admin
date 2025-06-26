@@ -1,6 +1,9 @@
 const { poolPromise } = require("../database/database");
 const sql = require("mssql");
 const { guildBankResource } = require("../resource/guildbank.resource");
+const {
+  guildBankHistoryCollection,
+} = require("../resource/guildBankHistory.resource");
 
 const getGuilds = async (req, res) => {
   const GUILD_TBL = "CHARACTER_01_DBF.dbo.GUILD_TBL";
@@ -118,7 +121,6 @@ const getGuildBank = async (req, res) => {
       WHERE GB.m_idGuild = @m_idGuild
     `;
     const result = await request.query(query);
-    console.log(m_idGuild, result);
     res.json({
       success: true,
       result: await guildBankResource(result.recordset[0]),
@@ -278,10 +280,95 @@ const getGuildRenameLogs = async (req, res) => {
   }
 };
 
+const getGuildBankHistory = async (req, res) => {
+  const LOGGING_TBL = "LOGGING_01_DBF.dbo.LOG_GUILD_BANK_TBL";
+  const CHARACTER_TBL = "CHARACTER_01_DBF.dbo.CHARACTER_TBL";
+  const LOG_ITEM_TBL = "LOGGING_01_DBF.dbo.LOG_ITEM_TBL";
+
+  const { m_idGuild } = req.params;
+  const sort = req.query.sort?.toString().replace(":", " ") || "L.s_date DESC";
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const offset = (page - 1) * limit;
+
+  try {
+    const pool = await poolPromise;
+
+    // Check if table exists
+    const checkTable = await pool
+      .request()
+      .query(`SELECT OBJECT_ID('${LOGGING_TBL}', 'U') AS TableId`);
+    const tableExists = checkTable.recordset[0].TableId !== null;
+
+    if (!tableExists) {
+      return res.json({
+        success: true,
+        page,
+        limit,
+        total: 0,
+        totalPages: 0,
+        result: [],
+        logging: false,
+      });
+    }
+
+    // Count total
+    const countResult = await pool
+      .request()
+      .input("m_idGuild", sql.Char(6), m_idGuild).query(`
+        SELECT COUNT(*) AS total 
+        FROM ${LOGGING_TBL}
+        WHERE m_idGuild = @m_idGuild
+      `);
+    const total = countResult.recordset[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Main query with JOINs
+    const resultQuery = await pool
+      .request()
+      .input("m_idGuild", sql.Char(6), m_idGuild)
+      .input("offset", sql.Int, offset)
+      .input("limit", sql.Int, limit).query(`
+        SELECT 
+          L.*,
+          C.m_szName,
+          I.Item_Name,
+          I.Item_durability,
+          I.m_nAbilityOption,
+          I.Item_count AS item_count_log,
+          I.State AS item_state_log,
+          I.MaxDurability,
+          I.m_nRandomOptItemId
+        FROM ${LOGGING_TBL} L
+        LEFT JOIN ${CHARACTER_TBL} C ON L.m_idPlayer = C.m_idPlayer
+        LEFT JOIN ${LOG_ITEM_TBL} I 
+          ON I.Item_UniqueNo = L.Item_UniqueNo 
+          AND I.s_date = L.s_date
+        WHERE L.m_idGuild = @m_idGuild
+        ORDER BY ${sort}
+        OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+      `);
+
+    res.json({
+      success: true,
+      page,
+      limit,
+      total,
+      totalPages,
+      result: await guildBankHistoryCollection(resultQuery.recordset),
+      logging: true,
+    });
+  } catch (err) {
+    console.error("getGuildBankHistory error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getGuilds,
   getGuildMembers,
   getGuildBank,
   renameGuild,
   getGuildRenameLogs,
+  getGuildBankHistory,
 };

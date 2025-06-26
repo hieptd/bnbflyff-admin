@@ -16,7 +16,6 @@ async function guildBankResource(itemData) {
 }
 
 async function guildBankCollection(items) {
-  console.log(items);
   return await Promise.all(items.map((item) => guildBankResource(item)));
 }
 
