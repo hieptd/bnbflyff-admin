@@ -228,7 +228,7 @@ const getChangeNameLogs = async (req, res) => {
 const mailPlayer = async (req, res) => {
   const {
     idReceiver,
-    idSender = "0000000",
+    idSender = "0000016",
     szTitle,
     szText,
     dwItemId,
@@ -245,11 +245,23 @@ const mailPlayer = async (req, res) => {
 
   try {
     const pool = await poolPromise;
-    const nMail = Math.floor(Math.random() * 100000000);
+
+    // Get iserverindex = serverindex + 50
+    const iserverindex = String(parseInt(serverindex) + 50).padStart(2, "0");
+
+    // Get max(nMail) for this server
+    const maxMailResult = await pool
+      .request()
+      .input("serverindex", sql.Char(2), iserverindex)
+      .query(
+        `SELECT ISNULL(MAX(nMail), 0) + 1 AS nextMailId FROM CHARACTER_01_DBF.dbo.MAIL_TBL WHERE serverindex = @serverindex`
+      );
+
+    const nMail = maxMailResult.recordset[0].nextMailId;
     const tmCreate = Math.floor(Date.now() / 1000);
 
+    // Prepare final attributes with default values
     const finalAttrs = {};
-
     for (const key in allowedAttrs) {
       finalAttrs[key] =
         Object.prototype.hasOwnProperty.call(attributes, key) &&
@@ -260,15 +272,12 @@ const mailPlayer = async (req, res) => {
           : 0;
     }
 
-    for (const [key, value] of Object.entries(finalAttrs)) {
-      request.input(key, allowedAttrs[key], value);
-    }
-
+    // Now initialize the request AFTER finalAttrs is ready
     const request = pool
       .request()
       .input("iGu", sql.Char(2), "A1")
       .input("nMail", sql.Int, nMail)
-      .input("serverindex", sql.Char(2), serverindex)
+      .input("serverindex", sql.Char(2), iserverindex)
       .input("idReceiver", sql.Char(7), idReceiver)
       .input("idSender", sql.Char(7), idSender)
       .input("nGold", sql.Int, 0)
@@ -279,6 +288,7 @@ const mailPlayer = async (req, res) => {
       .input("dwItemId", sql.Int, dwItemId)
       .input("nItemNum", sql.Int, nItemNum);
 
+    // Add attributes to request
     for (const [key, value] of Object.entries(finalAttrs)) {
       request.input(key, allowedAttrs[key], value);
     }
@@ -288,6 +298,7 @@ const mailPlayer = async (req, res) => {
     res.json({
       success: true,
       message: `Item ${dwItemId} sent to player ${idReceiver} via mail.`,
+      mailId: nMail,
     });
   } catch (err) {
     console.error("Mail item error:", err);

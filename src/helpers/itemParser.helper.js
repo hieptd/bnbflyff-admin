@@ -1,5 +1,6 @@
 const attributesData = require("../data/attributes.json");
 const RandomOptionDecoder = require("./RandomOptionDecoder");
+const IMAGE_SERVER = process.env.IMG_SERVER || "http://localhost:5173/";
 
 const parseItemStat = (stat, statNum = 1) => {
   const statProp = stat[`stat${statNum}Prop`]?.trim();
@@ -15,8 +16,8 @@ const parseItemStat = (stat, statNum = 1) => {
   };
 };
 
-const itemParse = (fetchedItem, randomOpt, enhancement) => {
-  let itemInfo = {};
+const itemParse = (fetchedItem, randomOpt = null, enhancement = 0) => {
+  let itemInfo = { ...fetchedItem };
   const {
     itemKind1,
     abilityMin,
@@ -58,6 +59,8 @@ const itemParse = (fetchedItem, randomOpt, enhancement) => {
   if (stat1?.stat1Prop) itemInfo.stat1 = parseItemStat(stat1, 1);
   if (stat2?.stat2Prop) itemInfo.stat2 = parseItemStat(stat2, 2);
   if (stat3?.stat3Prop) itemInfo.stat3 = parseItemStat(stat3, 3);
+
+  itemInfo.imageFullPath = IMAGE_SERVER + itemInfo.image?.toLowerCase();
 
   return itemInfo;
 };

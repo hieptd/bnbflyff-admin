@@ -1,4 +1,3 @@
-// Fix for ESM with type assertion
 const defAttrJsonContent = require("../data/attributes.json");
 
 class RandomOptionDecoder {
@@ -83,6 +82,37 @@ class RandomOptionDecoder {
   }
 
   /**
+   * Builds a 64-bit randomOptionId from dst and adjRaw (or adj).
+   * Accepts up to 3 awake objects: { dst: number, adjRaw?: number, adj?: number }
+   * @param {Array<{ dst: number, adjRaw?: number, adj?: number }>} options
+   * @param {boolean} [safeFlag=false]
+   * @returns {bigint}
+   */
+  static build(options, safeFlag = false) {
+    let result = BigInt(0);
+
+    let shift = 8n;
+
+    for (let i = 0; i < this.MAX_RANDOM_OPTION && i < options.length; i++) {
+      const { dst, adjRaw, adj } = options[i];
+      const adjToUse = adj >= 1 ? 512 - adj : adj;
+      if (dst == null || (adjRaw == null && adj == null)) continue;
+
+      const raw = adjRaw != null ? adjRaw : 512 - adjToUse;
+      const encoded = (dst << 10) | (raw & 0x3ff);
+
+      result |= BigInt(encoded) << shift;
+      shift += 18n;
+    }
+
+    if (safeFlag) {
+      result |= this.AWAKE_SAFE_FLAG;
+    }
+
+    return result;
+  }
+
+  /**
    * Decodes up to 3 random options from the 64-bit ID.
    * @param {number | bigint} randomOptionId
    * @returns {{
@@ -128,9 +158,6 @@ class RandomOptionDecoder {
 
       return {
         ...awakes,
-        // [`awaket${awakeIndex + 1}`]: `${
-        //   decodedAwake.dstName || decodedAwake.dstKey
-        // }, ${decodedAwake.adj}, ${decodedAwake.adjRaw}`,
         [`awake${awakeIndex + 1}`]: { label, value },
       };
     }, {});

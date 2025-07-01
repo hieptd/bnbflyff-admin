@@ -1,6 +1,13 @@
 const { poolPromise } = require("../database/database");
 const sql = require("mssql");
 const { itemCollection } = require("../resource/item.resource");
+const itemParse = require("../helpers/itemParser.helper");
+const fs = require("fs");
+const path = require("path");
+const RandomOptionDecoder = require("../helpers/RandomOptionDecoder");
+
+const chunkDir = path.join(__dirname, "../data/chunks");
+const attributesPath = path.join(__dirname, "../data/attributes.json");
 
 const TABLES = {
   CHARACTER: "CHARACTER_01_DBF.dbo.CHARACTER_TBL",
@@ -15,6 +22,109 @@ const TABLES = {
 const FUNCTIONS = {
   ContainsItemId: "CHARACTER_01_DBF.dbo.ContainsItemId",
 };
+
+const generateRandomOptionID = async (req, res) => {
+  try {
+    const { options = [], safeFlag = false } = req.body;
+
+    if (!Array.isArray(options) || options.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or missing 'options' array.",
+      });
+    }
+
+    const formattedOptions = options
+      .filter((opt) => opt.dst != null)
+      .map((opt) => {
+        const dst = Number(opt.dst);
+        const adj = opt.adj !== undefined ? Number(opt.adj) : undefined;
+        const adjRaw =
+          opt.adjRaw !== undefined ? Number(opt.adjRaw) : undefined;
+        return { dst, adj, adjRaw };
+      });
+
+    if (formattedOptions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid awake options provided.",
+      });
+    }
+
+    const randomOptionId = RandomOptionDecoder.build(
+      formattedOptions,
+      safeFlag
+    );
+
+    return res.json({
+      success: true,
+      randomOptionId: randomOptionId.toString(),
+    });
+  } catch (err) {
+    console.error("Error in generateRandomOptionID:", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
+const getItemData = async (req, res) => {
+  const query = req.query.query;
+  if (!query || query.trim() === "") {
+    return res.status(400).json({ message: "Missing or empty query." });
+  }
+
+  const isNumeric = /^\d+$/.test(query);
+  const lowercaseQuery = query.toLowerCase();
+
+  try {
+    const files = fs
+      .readdirSync(chunkDir)
+      .filter((file) => file.endsWith(".json"));
+    const matches = [];
+
+    for (const file of files) {
+      const filePath = path.join(chunkDir, file);
+      const items = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+      for (const item of items) {
+        if (isNumeric) {
+          if (item.id.toString().includes(query)) {
+            matches.push(itemParse(item));
+          }
+        } else {
+          const nameMatch = (item.displayName || "")
+            .toLowerCase()
+            .includes(lowercaseQuery);
+          const codeMatch = (item.dwID || "")
+            .toLowerCase()
+            .includes(lowercaseQuery);
+          if (nameMatch || codeMatch) {
+            matches.push(itemParse(item));
+          }
+        }
+
+        if (matches.length >= 5) break;
+      }
+
+      if (matches.length >= 5) break;
+    }
+
+    if (matches.length === 0) {
+      return res.status(404).json({ message: "No matching items found." });
+    }
+
+    res.json({
+      success: true,
+      result: matches,
+    });
+  } catch (err) {
+    console.error("Error in getItemData:", err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
 const getItems = async (req, res) => {
   const itemId = req.query.itemId;
   const page = parseInt(req.query.page) || 1;
@@ -157,4 +267,27 @@ const getItems = async (req, res) => {
   }
 };
 
-module.exports = { getItems };
+const getItemAttributes = (req, res) => {
+  try {
+    const raw = fs.readFileSync(attributesPath, "utf-8");
+    const data = JSON.parse(raw);
+
+    return res.json({
+      success: true,
+      result: data,
+    });
+  } catch (err) {
+    console.error("Failed to load attributes.json:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Unable to load attribute data.",
+    });
+  }
+};
+
+module.exports = {
+  getItems,
+  getItemData,
+  generateRandomOptionID,
+  getItemAttributes,
+};
